@@ -1,3 +1,3 @@
-# KH Labs - Jenkins
-## Deploy an AMI
+# KH Labs - Sandbox
+## Used for intro to k8s
 
