@@ -94,11 +94,27 @@ resource "aws_key_pair" "lab_keypair" {
   public_key = random_id.keypair.keepers.public_key
 }
 
+data "aws_ami" "latest_sandbox" {
+  most_recent = true
+  owners      = ["772816346052"]
+
+  filter {
+    name   = "name"
+    values = ["bryan-sandbox*"]
+  }
+}
+
 resource "aws_instance" "sandbox" {
-  ami                    = "ami-02c7c728a7874ae7a"
+  ami                    = data.aws_ami.latest_sandbox.id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.sandbox.id
   vpc_security_group_ids = [aws_security_group.sandbox.id]
   key_name               = aws_key_pair.lab_keypair.id
-  tags                   = module.tags_sandbox.tags
+
+  root_block_device {
+    volume_size = 100
+    volume_type = "gp2"
+  }
+
+  tags = module.tags_sandbox.tags
 }
