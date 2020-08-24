@@ -1,6 +1,11 @@
+
 provider "aws" {
   profile = "kh-labs"
   region  = "me-south-1"
+}
+
+provider "random" {
+
 }
 
 module "dev" {

@@ -1,5 +1,3 @@
-provider "random" {}
-
 module "tags_network" {
   source      = "git::https://github.com/cloudposse/terraform-null-label.git"
   namespace   = var.name
