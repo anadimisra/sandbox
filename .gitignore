@@ -1,3 +1,4 @@
+tmp
 *.tfstate
 *.tfstate*
 ssh/*
