@@ -8,11 +8,9 @@ start:
 	docker container run -it -d \
 		   --env TF_NAMESPACE=$$TF_NAMESPACE \
 		   --env AWS_PROFILE="kh-labs" \
-		   --env TF_PLUGIN_CACHE_DIR="/plugin-cache" \
 		   -v /var/run/docker.sock:/var/run/docker.sock \
 		   -v $$PWD:/$$(basename $$PWD) \
 		   -v $$PWD/creds:/root/.aws \
-		   -v terraform-plugin-cache:/plugin-cache \
 		   --hostname "$$(basename $$PWD)" \
 		   --name "$$(basename $$PWD)" \
 		   -w /$$(basename $$PWD) \
