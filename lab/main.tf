@@ -100,17 +100,9 @@ resource "aws_security_group" "sandbox" {
   }
 }
 
-resource "random_id" "keypair" {
-  keepers = {
-    public_key = file(var.public_key_path)
-  }
-
-  byte_length = 8
-}
-
 resource "aws_key_pair" "lab_keypair" {
-  key_name   = format("%s_keypair_%s", var.name, random_id.keypair.hex)
-  public_key = random_id.keypair.keepers.public_key
+  key_name   = format("%s%s", var.name, "_keypair")
+  public_key = file(var.public_key_path)
 }
 
 data "aws_ami" "latest_sandbox" {

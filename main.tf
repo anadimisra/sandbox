@@ -4,10 +4,6 @@ provider "aws" {
   region  = "me-south-1"
 }
 
-provider "random" {
-
-}
-
 module "dev" {
   name             = var.name
   source           = "./lab"
