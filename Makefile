@@ -1,13 +1,25 @@
 .PHONY: tmp
 
-run: stop start exec
+terraclean: 
+	rm -rf .terraform ssh terraform.tfstate*
+
+run: stop unsetenv setenv start exec
 
 up: fmt plan apply
 
+setenv:
+	export TF_NAMESPACE=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 6 | head -n 1)
+	export BUCKET_NAME_PREFIX=$(echo "terraform-remote-state-backend")
+	# time terraform init terraform-s3-backend
+
+unsetenv:
+	unset TF_NAMESPACE
+	unset BUCKET_NAME_PREFIX
+
 start:
 	docker container run -it -d \
-		   --env TF_NAMESPACE=$$TF_NAMESPACE \
-		   --env AWS_PROFILE="kh-labs" \
+	       --env TF_NAMESPACE="$$TF_NAMESPACE"
+		   --env BUCKET_NAME_PREFIX="$$BUCKET_NAME_PREFIX"
 		   --env TF_PLUGIN_CACHE_DIR="/plugin-cache" \
 		   -v /var/run/docker.sock:/var/run/docker.sock \
 		   -v $$PWD:/$$(basename $$PWD) \
@@ -16,7 +28,7 @@ start:
 		   --hostname "$$(basename $$PWD)" \
 		   --name "$$(basename $$PWD)" \
 		   -w /$$(basename $$PWD) \
-		   bryandollery/terraform-packer-aws-alpine bash
+		   anadimisra/awscli2-terraform-packer-helm-kubectl:1.0
 
 exec:
 	docker exec -it "$$(basename $$PWD)" bash || true
@@ -49,5 +61,6 @@ connect:
 init:
 	rm -rf .terraform ssh
 	mkdir ssh
-	time terraform init -backend-config="bucket=devops-bootcamp-remote-state-$$TF_NAMESPACE" -backend-config="key=$$TF_NAMESPACE/labs/terraform.tfstate" -backend-config="dynamodb_table=devops-bootcamp-locks-$$TF_NAMESPACE"
+	time terraform init
+	# time terraform init -backend-config="$$BUCKET_NAME_PREFIX-$$TF_NAMESPACE" -backend-config="key=$$TF_NAMESPACE/labs/terraform.tfstate" -backend-config="dynamodb_table=terraform-remote-state-locks-$$TF_NAMESPACE"
 	ssh-keygen -t rsa -f ./ssh/id_rsa -q -N ""

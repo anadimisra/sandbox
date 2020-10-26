@@ -1,6 +1,6 @@
 provider "aws" {
-  profile = "kh-labs"
-  region  = "me-south-1"
+  profile = "mfa"
+  region  = "us-east-1"
 }
 
 module "dev" {
@@ -11,4 +11,3 @@ module "dev" {
   private_key_path = var.private_key_path
   instance_type    = var.instance_type
 }
-

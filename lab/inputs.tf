@@ -18,8 +18,8 @@ variable "name" {
 }
 
 variable "aws_region" {
-  description = "Bahrain"
-  default     = "me-south-1"
+  description = "N. Virginia"
+  default     = "us-east-1"
 }
 
 variable "instance_type" {

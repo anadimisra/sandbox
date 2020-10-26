@@ -117,12 +117,18 @@ resource "aws_key_pair" "lab_keypair" {
 
 data "aws_ami" "latest_sandbox" {
   most_recent = true
-  owners      = ["772816346052"]
 
   filter {
     name   = "name"
-    values = ["bryan-sandbox*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"]
 }
 
 resource "aws_instance" "sandbox" {
